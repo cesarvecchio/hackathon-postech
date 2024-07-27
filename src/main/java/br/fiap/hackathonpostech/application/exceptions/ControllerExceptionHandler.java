@@ -16,7 +16,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ClienteExisteException.class)
     public ResponseEntity<StandardError> cpfException(ClienteExisteException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.CONFLICT;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
 
         StandardError standardError = StandardError.builder()
             .timestamp(Instant.now())
