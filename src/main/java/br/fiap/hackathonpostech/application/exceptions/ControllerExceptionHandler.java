@@ -16,7 +16,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ClienteExisteException.class)
     public ResponseEntity<StandardErrorException> clienteExisteException(ClienteExisteException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         StandardErrorException standardErrorException = StandardErrorException.builder()
             .timestamp(Instant.now())
@@ -38,6 +38,6 @@ public class ControllerExceptionHandler {
                 .build()
             )
             .toList();
-        return ResponseEntity.badRequest().body(validationErrors);
+        return ResponseEntity.internalServerError().body(validationErrors);
     }
 }

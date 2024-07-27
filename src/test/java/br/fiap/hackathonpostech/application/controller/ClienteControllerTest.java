@@ -96,11 +96,11 @@ class ClienteControllerTest {
         mockMvc.perform(post("/cliente")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(clienteRequest)))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isInternalServerError())
             .andExpect(result -> {
                 List<ValidationError> validationErrors = jsonToObject(result.getResponse().getContentAsString(), new TypeReference<>() {});
-                assertEquals(validationErrors.get(0).field(), "cpf");
-                assertEquals(validationErrors.get(0).errorMessage(), "must not be null");
+                assertEquals("cpf", validationErrors.get(0).field());
+                assertEquals("must not be blank", validationErrors.get(0).errorMessage());
             });
     }
 
@@ -117,11 +117,11 @@ class ClienteControllerTest {
         mockMvc.perform(post("/cliente")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(clienteRequest)))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isInternalServerError())
             .andExpect(result -> {
                 StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(), StandardErrorException.class);
-                assertEquals(validationErrors.getError(), "Cliente existe exception");
-                assertEquals(validationErrors.getMessage(), "Já existe um cliente com o CPF informado.");
+                assertEquals("Cliente existe exception", validationErrors.getError());
+                assertEquals("Já existe um cliente com o CPF informado.", validationErrors.getMessage());
             });
     }
 
