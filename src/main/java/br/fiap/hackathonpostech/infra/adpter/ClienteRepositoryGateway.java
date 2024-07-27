@@ -20,4 +20,11 @@ public class ClienteRepositoryGateway implements ClienteGateway {
 
         return ClienteMapper.entityToCliente(clienteRepository.save(clienteEntity));
     }
+
+    @Override
+    public Cliente buscarClientePorCpf(String cpf) {
+        return clienteRepository.findByCpf(cpf)
+            .map(ClienteMapper::entityToCliente)
+            .orElse(null);
+    }
 }

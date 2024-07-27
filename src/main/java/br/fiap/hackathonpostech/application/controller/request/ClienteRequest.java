@@ -1,7 +1,9 @@
 package br.fiap.hackathonpostech.application.controller.request;
 
+import jakarta.validation.constraints.NotNull;
+
 public record ClienteRequest(
-    String cpf,
+    @NotNull String cpf,
     String nome,
     String email,
     String telefone,

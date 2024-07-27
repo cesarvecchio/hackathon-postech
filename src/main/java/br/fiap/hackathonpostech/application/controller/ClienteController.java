@@ -6,6 +6,7 @@ import br.fiap.hackathonpostech.application.usecase.ClienteUseCase;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
 import br.fiap.hackathonpostech.infra.mapper.ClienteMapper;
 import br.fiap.hackathonpostech.infra.presenter.ClientePresenter;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponse> registrarCliente(@RequestBody ClienteRequest clienteRequest) {
+    public ResponseEntity<ClienteResponse> registrarCliente(@Valid @RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = clienteUseCase.registrarCliente(ClienteMapper.requestToCliente(clienteRequest));
 
         ClienteResponse clienteResponse = new ClienteResponse(cliente.getId().toString());
