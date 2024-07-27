@@ -10,18 +10,18 @@ public class ClienteMapper {
     }
 
     public static Cliente entityToCliente(ClienteEntity clienteEntity) {
-        return new Cliente(
-            clienteEntity.getId(),
-            clienteEntity.getCpf(),
-            clienteEntity.getNome(),
-            clienteEntity.getEmail(),
-            clienteEntity.getTelefone(),
-            clienteEntity.getRua(),
-            clienteEntity.getCidade(),
-            clienteEntity.getEstado(),
-            clienteEntity.getCep(),
-            clienteEntity.getPais()
-        );
+        return Cliente.builder()
+            .id(clienteEntity.getId())
+            .cpf(clienteEntity.getCpf())
+            .nome(clienteEntity.getNome())
+            .email(clienteEntity.getEmail())
+            .telefone(clienteEntity.getTelefone())
+            .rua(clienteEntity.getRua())
+            .cidade(clienteEntity.getCidade())
+            .estado(clienteEntity.getEstado())
+            .cep(clienteEntity.getCep())
+            .pais(clienteEntity.getPais())
+            .build();
     }
 
     public static ClienteEntity clienteToEntity(Cliente cliente) {
@@ -40,17 +40,16 @@ public class ClienteMapper {
     }
 
     public static Cliente requestToCliente(ClienteRequest clienteRequest) {
-        return new Cliente(
-            null,
-            clienteRequest.cpf(),
-            clienteRequest.nome(),
-            clienteRequest.email(),
-            clienteRequest.telefone(),
-            clienteRequest.rua(),
-            clienteRequest.cidade(),
-            clienteRequest.estado(),
-            clienteRequest.cep(),
-            clienteRequest.pais()
-        );
+        return Cliente.builder()
+            .cpf(clienteRequest.cpf())
+            .nome(clienteRequest.nome())
+            .email(clienteRequest.email())
+            .telefone(clienteRequest.telefone())
+            .rua(clienteRequest.rua())
+            .cidade(clienteRequest.cidade())
+            .estado(clienteRequest.estado())
+            .cep(clienteRequest.cep())
+            .pais(clienteRequest.pais())
+            .build();
     }
 }

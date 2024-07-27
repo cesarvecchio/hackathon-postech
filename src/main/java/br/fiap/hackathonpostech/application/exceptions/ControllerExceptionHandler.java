@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(ClienteExisteException.class)
-    public ResponseEntity<StandardError> cpfException(ClienteExisteException e, HttpServletRequest request) {
+    public ResponseEntity<StandardErrorException> clienteExisteException(ClienteExisteException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        StandardError standardError = StandardError.builder()
+        StandardErrorException standardErrorException = StandardErrorException.builder()
             .timestamp(Instant.now())
             .status(status.value())
             .error("Cliente existe exception")
@@ -26,7 +26,7 @@ public class ControllerExceptionHandler {
             .path(request.getRequestURI())
             .build();
 
-        return ResponseEntity.status(status).body(standardError);
+        return ResponseEntity.status(status).body(standardErrorException);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

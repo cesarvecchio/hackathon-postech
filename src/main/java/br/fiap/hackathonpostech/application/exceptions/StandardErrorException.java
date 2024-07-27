@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @NoArgsConstructor
-public class StandardError {
+public class StandardErrorException {
     private Instant timestamp;
     private Integer status;
     private String error;
