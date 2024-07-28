@@ -1,8 +1,10 @@
 package br.fiap.hackathonpostech.application.usecase;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import br.fiap.hackathonpostech.application.exceptions.ClienteExisteException;
+import br.fiap.hackathonpostech.application.exceptions.ClienteNaoExisteException;
 import br.fiap.hackathonpostech.application.gateway.ClienteGateway;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
 
@@ -18,6 +20,16 @@ public class ClienteUseCase {
         validaCliente(cliente);
 
         return clienteGateway.registrarCliente(cliente);
+    }
+
+    public Cliente buscaClientePorCpf(String cpf) {
+        Cliente clienteCadastrado = clienteGateway.buscarClientePorCpf(cpf);
+
+        if (isNull(clienteCadastrado)) {
+            throw new ClienteNaoExisteException("Nenhum cliente cadastrado com o CPF informado.");
+        }
+
+        return clienteCadastrado;
     }
 
     private void validaCliente(Cliente cliente) {

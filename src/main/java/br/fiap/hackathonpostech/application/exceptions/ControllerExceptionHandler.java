@@ -40,4 +40,49 @@ public class ControllerExceptionHandler {
             .toList();
         return ResponseEntity.internalServerError().body(validationErrors);
     }
+
+    @ExceptionHandler(ClienteNaoExisteException.class)
+    public ResponseEntity<StandardErrorException> clienteNaoExisteException(ClienteNaoExisteException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Cliente nao existe exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
+
+    @ExceptionHandler(LimiteQtdCartoesException.class)
+    public ResponseEntity<StandardErrorException> limiteQtdCartoesException(LimiteQtdCartoesException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Limite qtd cartoes exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
+
+    @ExceptionHandler(CartaoExisteException.class)
+    public ResponseEntity<StandardErrorException> cartaoExisteException(CartaoExisteException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Cartao existe exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
 }
