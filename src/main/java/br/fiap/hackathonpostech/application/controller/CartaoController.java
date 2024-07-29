@@ -1,8 +1,8 @@
 package br.fiap.hackathonpostech.application.controller;
 
 import br.fiap.hackathonpostech.application.controller.response.CartaoRequest;
+import br.fiap.hackathonpostech.application.documentation.CartaoControllerDoc;
 import br.fiap.hackathonpostech.application.usecase.CartaoUseCase;
-import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.infra.mapper.CartaoMapper;
 import br.fiap.hackathonpostech.infra.presenter.CartaoPresenter;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/cartao")
-public class CartaoController {
+public class CartaoController implements CartaoControllerDoc {
 
     private final CartaoUseCase cartaoUseCase;
 

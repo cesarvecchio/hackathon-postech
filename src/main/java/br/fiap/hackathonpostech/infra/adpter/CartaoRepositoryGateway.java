@@ -34,7 +34,7 @@ public class CartaoRepositoryGateway implements CartaoGateway {
     }
 
     @Override
-    public Boolean existeCartaoPorNumero(String numero) {
+    public boolean existeCartaoPorNumero(String numero) {
         return cartaoRepository.existsByNumero(numero);
     }
 

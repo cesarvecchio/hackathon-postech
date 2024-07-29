@@ -8,5 +8,5 @@ import java.util.List;
 public interface CartaoRepository extends JpaRepository<CartaoEntity, Integer> {
     List<CartaoEntity> findAllByCpf(String cpf);
 
-    Boolean existsByNumero(String numero);
+    boolean existsByNumero(String numero);
 }

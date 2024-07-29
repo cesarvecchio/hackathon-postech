@@ -10,5 +10,5 @@ public interface CartaoGateway {
 
     List<Cartao> buscarCartoesPorCpf(String cpf);
 
-    Boolean existeCartaoPorNumero(String numero);
+    boolean existeCartaoPorNumero(String numero);
 }

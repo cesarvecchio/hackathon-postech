@@ -58,7 +58,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(LimiteQtdCartoesException.class)
     public ResponseEntity<StandardErrorException> limiteQtdCartoesException(LimiteQtdCartoesException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus status = HttpStatus.FORBIDDEN;
 
         StandardErrorException standardErrorException = StandardErrorException.builder()
                 .timestamp(Instant.now())

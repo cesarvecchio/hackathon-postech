@@ -1,12 +1,5 @@
 package br.fiap.hackathonpostech.application.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import br.fiap.hackathonpostech.application.controller.request.ClienteRequest;
 import br.fiap.hackathonpostech.application.controller.response.ClienteResponse;
 import br.fiap.hackathonpostech.application.exceptions.ControllerExceptionHandler;
@@ -21,8 +14,6 @@ import br.fiap.hackathonpostech.infra.persistence.repository.ClienteRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +22,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ClienteControllerTest {
 
@@ -50,12 +49,12 @@ class ClienteControllerTest {
         ClienteController clienteController = new ClienteController(clienteUseCase);
 
         mockMvc = MockMvcBuilders.standaloneSetup(clienteController)
-            .setControllerAdvice(new ControllerExceptionHandler())
-            .addFilter((request, response, chain) -> {
-                response.setCharacterEncoding("UTF-8");
-                chain.doFilter(request, response);
-            }, "/*")
-            .build();
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .addFilter((request, response, chain) -> {
+                    response.setCharacterEncoding("UTF-8");
+                    chain.doFilter(request, response);
+                }, "/*")
+                .build();
     }
 
     @AfterEach
@@ -76,13 +75,13 @@ class ClienteControllerTest {
 
         //Act && Assert
         mockMvc.perform(post("/cliente")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(clienteRequest)))
-            .andExpect(status().isOk())
-            .andExpect(result -> {
-                ClienteResponse clienteResponse = jsonToObject(result.getResponse().getContentAsString(), ClienteResponse.class);
-                assertEquals(clienteEntitySalvo.getId().toString(), clienteResponse.id_cliente());
-            });
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(clienteRequest)))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    ClienteResponse clienteResponse = jsonToObject(result.getResponse().getContentAsString(), ClienteResponse.class);
+                    assertEquals(clienteEntitySalvo.getId().toString(), clienteResponse.id_cliente());
+                });
 
         verify(clienteRepository, times(1)).save(clienteEntity);
     }
@@ -94,14 +93,15 @@ class ClienteControllerTest {
 
         //Act && Assert
         mockMvc.perform(post("/cliente")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(clienteRequest)))
-            .andExpect(status().isInternalServerError())
-            .andExpect(result -> {
-                List<ValidationError> validationErrors = jsonToObject(result.getResponse().getContentAsString(), new TypeReference<>() {});
-                assertEquals("cpf", validationErrors.get(0).field());
-                assertEquals("must not be blank", validationErrors.get(0).errorMessage());
-            });
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(clienteRequest)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(result -> {
+                    List<ValidationError> validationErrors = jsonToObject(result.getResponse().getContentAsString(), new TypeReference<>() {
+                    });
+                    assertEquals("cpf", validationErrors.get(0).field());
+                    assertEquals("must not be blank", validationErrors.get(0).errorMessage());
+                });
     }
 
     @Test
@@ -115,14 +115,14 @@ class ClienteControllerTest {
 
         //Act && Assert
         mockMvc.perform(post("/cliente")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(clienteRequest)))
-            .andExpect(status().isInternalServerError())
-            .andExpect(result -> {
-                StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(), StandardErrorException.class);
-                assertEquals("Cliente existe exception", validationErrors.getError());
-                assertEquals("Já existe um cliente com o CPF informado.", validationErrors.getMessage());
-            });
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(clienteRequest)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(result -> {
+                    StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(), StandardErrorException.class);
+                    assertEquals("Cliente existe exception", validationErrors.getError());
+                    assertEquals("Já existe um cliente com o CPF informado.", validationErrors.getMessage());
+                });
     }
 
     private ClienteRequest gerarClienteRequest(String cpf) {
