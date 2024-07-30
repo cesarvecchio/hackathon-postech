@@ -130,4 +130,19 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(status).body(standardErrorException);
     }
+
+    @ExceptionHandler(LimiteExcedidoCartaoException.class)
+    public ResponseEntity<StandardErrorException> limiteExcedidoCartaoException(LimiteExcedidoCartaoException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.PAYMENT_REQUIRED;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Limite Execedido exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
 }

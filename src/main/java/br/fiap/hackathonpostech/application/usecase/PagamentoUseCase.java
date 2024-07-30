@@ -2,6 +2,7 @@ package br.fiap.hackathonpostech.application.usecase;
 
 import br.fiap.hackathonpostech.application.exceptions.CartaoNaoExisteException;
 import br.fiap.hackathonpostech.application.exceptions.CodigoCartaoInvalidoException;
+import br.fiap.hackathonpostech.application.exceptions.LimiteExcedidoCartaoException;
 import br.fiap.hackathonpostech.application.exceptions.ValidadeCartaoException;
 import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
@@ -10,6 +11,10 @@ import br.fiap.hackathonpostech.domain.entity.Pagamento;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import static br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum.CARTAO_CREDITO;
+import static br.fiap.hackathonpostech.domain.enums.StatusEnum.APROVADO;
+import static br.fiap.hackathonpostech.domain.enums.StatusEnum.REJEITADO;
 
 public class PagamentoUseCase {
     private final PagamentoGateway pagamentoGateway;
@@ -21,7 +26,8 @@ public class PagamentoUseCase {
     }
 
     public Pagamento registrarPagamento(Pagamento pagamento) {
-
+        pagamento.setMetodoPagamento(CARTAO_CREDITO);
+        pagamento.setDescricao("Compra produdo X");
         Cartao cartao = cartaoUseCase.buscarCartoesPorCpf(pagamento.getCpf())
                 .stream()
                 .filter(card -> card.getNumero().equals(pagamento.getNumero()))
@@ -30,8 +36,12 @@ public class PagamentoUseCase {
 
         validarCodigoCartao(cartao, pagamento.getCvv());
         validarDataExpiracao(cartao, pagamento.getDataValidade());
+        validarLimiteDisponivel(cartao, pagamento);
 
-        return null; // TODO: IMPLEMENTAR RETORNO REAL
+        pagamento.setStatus(APROVADO);
+        //cartao.setLimite(cartao.getLimite() - pagamento.getValor());
+
+        return pagamentoGateway.registrarPagamento(pagamento, cartao);
     }
 
     private void validarCodigoCartao(Cartao cartao, String cvv) {
@@ -67,5 +77,14 @@ public class PagamentoUseCase {
 
         // Comparar a data de validade com a data atual
         return validade.isBefore(anoMesAtual);
+    }
+
+    private void validarLimiteDisponivel(Cartao cartao, Pagamento pagamento) {
+
+        if(cartao.getLimite() <= pagamento.getValor()){
+            pagamento.setStatus(REJEITADO);
+            pagamentoGateway.registrarPagamento(pagamento, cartao);
+            throw new LimiteExcedidoCartaoException("Limite disponível insuficiente para realizar o pagamento!");
+        }
     }
 }

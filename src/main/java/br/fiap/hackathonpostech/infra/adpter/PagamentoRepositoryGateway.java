@@ -3,6 +3,9 @@ package br.fiap.hackathonpostech.infra.adpter;
 import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.domain.entity.Pagamento;
+import br.fiap.hackathonpostech.infra.mapper.CartaoMapper;
+import br.fiap.hackathonpostech.infra.mapper.PagamentoMapper;
+import br.fiap.hackathonpostech.infra.persistence.entity.PagamentoEntity;
 import br.fiap.hackathonpostech.infra.persistence.repository.PagamentoRepository;
 
 public class PagamentoRepositoryGateway implements PagamentoGateway {
@@ -15,6 +18,9 @@ public class PagamentoRepositoryGateway implements PagamentoGateway {
 
     @Override
     public Pagamento registrarPagamento(Pagamento pagamento, Cartao cartao) {
-        return null; //TODO: IMPLEMENTAR RETORNO REAL
+        PagamentoEntity pagamentoEntity = PagamentoMapper.pagamentoToEntity(pagamento);
+        pagamentoEntity.setCartao(CartaoMapper.cartaoToEntity(cartao));
+
+        return PagamentoMapper.entityToPagamento(pagamentoRepository.save(pagamentoEntity));
     }
 }
