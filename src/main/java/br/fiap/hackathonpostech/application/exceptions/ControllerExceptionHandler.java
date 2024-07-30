@@ -6,10 +6,13 @@ import java.time.Instant;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -84,5 +87,47 @@ public class ControllerExceptionHandler {
                 .build();
 
         return ResponseEntity.status(status).body(standardErrorException);
+    }
+
+    @ExceptionHandler(UsuarioNaoExisteException.class)
+    public ResponseEntity<StandardErrorException> usuarioNaoExisteException(UsuarioNaoExisteException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Usuario nao existe exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
+
+    @ExceptionHandler(UsuarioExisteException.class)
+    public ResponseEntity<StandardErrorException> usuarioExisteException(UsuarioExisteException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Usuario existe exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    ResponseEntity<StandardErrorException> handleWrongCredentials(BadCredentialsException e, HttpServletRequest request) {
+        StandardErrorException error = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(NOT_FOUND.value())
+                .error("Bad credentials exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(NOT_FOUND.value()).body(error);
     }
 }
