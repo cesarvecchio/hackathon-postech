@@ -1,19 +1,22 @@
 package br.fiap.hackathonpostech.infra.persistence.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @Entity(name = "TB_CARTAO")
 public class CartaoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String cpf;
     private Integer limite;
     private String numero;
@@ -23,7 +26,7 @@ public class CartaoEntity {
     @JoinColumn(name = "clienteId")
     private ClienteEntity cliente;
 
-    public CartaoEntity(Integer id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
+    public CartaoEntity(UUID id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
         this.id = id;
         this.cpf = cpf;
         this.limite = limite;

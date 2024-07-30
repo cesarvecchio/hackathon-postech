@@ -1,6 +1,6 @@
 package br.fiap.hackathonpostech.application.controller;
 
-import br.fiap.hackathonpostech.application.controller.response.CartaoRequest;
+import br.fiap.hackathonpostech.application.controller.request.CartaoRequest;
 import br.fiap.hackathonpostech.application.documentation.CartaoControllerDoc;
 import br.fiap.hackathonpostech.application.usecase.CartaoUseCase;
 import br.fiap.hackathonpostech.infra.mapper.CartaoMapper;

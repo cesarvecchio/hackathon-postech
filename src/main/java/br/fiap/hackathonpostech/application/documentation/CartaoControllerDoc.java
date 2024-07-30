@@ -1,6 +1,6 @@
 package br.fiap.hackathonpostech.application.documentation;
 
-import br.fiap.hackathonpostech.application.controller.response.CartaoRequest;
+import br.fiap.hackathonpostech.application.controller.request.CartaoRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

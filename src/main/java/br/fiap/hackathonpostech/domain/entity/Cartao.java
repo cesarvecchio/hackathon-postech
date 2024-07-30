@@ -1,14 +1,13 @@
 package br.fiap.hackathonpostech.domain.entity;
 
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 @Builder
 public class Cartao {
-    private Integer id;
+    private UUID id;
     private String cpf;
     private Integer limite;
     private String numero;
