@@ -5,14 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @Entity
 public class CartaoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String cpf;
     private Integer limite;
     private String numero;
@@ -24,7 +25,7 @@ public class CartaoEntity {
     @OneToMany(mappedBy = "cartao")
     private Set<PagamentoEntity> pagamentos;
 
-    public CartaoEntity(Integer id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
+    public CartaoEntity(UUID id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
         this.id = id;
         this.cpf = cpf;
         this.limite = limite;
