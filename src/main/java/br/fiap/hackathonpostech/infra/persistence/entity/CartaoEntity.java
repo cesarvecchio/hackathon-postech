@@ -1,11 +1,10 @@
 package br.fiap.hackathonpostech.infra.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +21,8 @@ public class CartaoEntity {
     @ManyToOne
     @JoinColumn(name = "clienteId")
     private ClienteEntity cliente;
+    @OneToMany(mappedBy = "cartao")
+    private Set<PagamentoEntity> pagamentos;
 
     public CartaoEntity(Integer id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
         this.id = id;
