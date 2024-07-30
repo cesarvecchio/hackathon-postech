@@ -12,8 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 @Configuration
 public class UsuarioConfig {
     @Bean
-    UsuarioUseCase userUseCase(UsuarioGateway usuarioGateway, AuthenticationManager authenticationManager, TokenService tokenService) {
-        return new UsuarioUseCase(usuarioGateway, authenticationManager, tokenService);
+    UsuarioUseCase userUseCase(AuthenticationManager authenticationManager, TokenService tokenService) {
+        return new UsuarioUseCase(authenticationManager, tokenService);
     }
 
     @Bean

@@ -13,27 +13,6 @@ public class UsuarioRepositoryGateway implements UsuarioGateway {
     }
 
     @Override
-    public Usuario login(String usuario, String senha) {
-        return usuarioRepository.findByUsuarioAndSenha(usuario, senha)
-                .map(UsuarioMapper::entityToUsuario)
-                .orElse(null);
-
-    }
-
-    @Override
-    public Usuario registrarUsuario(Usuario usuario) {
-        return UsuarioMapper.entityToUsuario(
-                usuarioRepository.save(
-                        UsuarioMapper.userToEntity(usuario)
-                ));
-    }
-
-    @Override
-    public Usuario autenticarUsuario(Usuario usuario) {
-        return null;
-    }
-
-    @Override
     public Usuario encontrarPorUsuario(String usuario) {
         return usuarioRepository.findByUsuario(usuario)
                 .map(UsuarioMapper::entityToUsuario)
