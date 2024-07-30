@@ -1,6 +1,6 @@
 package br.fiap.hackathonpostech.infra.mapper;
 
-import br.fiap.hackathonpostech.application.controller.response.CartaoRequest;
+import br.fiap.hackathonpostech.application.controller.request.CartaoRequest;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.infra.persistence.entity.CartaoEntity;
 

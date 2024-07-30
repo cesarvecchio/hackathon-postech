@@ -30,7 +30,7 @@ public class ClienteController implements ClienteControllerDoc {
     public ResponseEntity<ClienteResponse> registrarCliente(@Valid @RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = clienteUseCase.registrarCliente(ClienteMapper.requestToCliente(clienteRequest));
 
-        ClienteResponse clienteResponse = new ClienteResponse(cliente.getId().toString());
+        ClienteResponse clienteResponse = new ClienteResponse(cliente.getId());
 
         return ClientePresenter.toResponseEntity(clienteResponse, HttpStatusCode.valueOf(200));
     }
