@@ -6,11 +6,15 @@ import br.fiap.hackathonpostech.application.exceptions.LimiteExcedidoCartaoExcep
 import br.fiap.hackathonpostech.application.exceptions.ValidadeCartaoException;
 import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
+import br.fiap.hackathonpostech.domain.entity.Cliente;
 import br.fiap.hackathonpostech.domain.entity.Pagamento;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum.CARTAO_CREDITO;
 import static br.fiap.hackathonpostech.domain.enums.StatusEnum.APROVADO;
@@ -19,10 +23,12 @@ import static br.fiap.hackathonpostech.domain.enums.StatusEnum.REJEITADO;
 public class PagamentoUseCase {
     private final PagamentoGateway pagamentoGateway;
     private final CartaoUseCase cartaoUseCase;
+    private final ClienteUseCase clienteUseCase;
 
-    public PagamentoUseCase(PagamentoGateway pagamentoGateway, CartaoUseCase cartaoUseCase) {
+    public PagamentoUseCase(PagamentoGateway pagamentoGateway, CartaoUseCase cartaoUseCase, ClienteUseCase clienteUseCase) {
         this.pagamentoGateway = pagamentoGateway;
         this.cartaoUseCase = cartaoUseCase;
+        this.clienteUseCase = clienteUseCase;
     }
 
     public Pagamento registrarPagamento(Pagamento pagamento) {
@@ -86,5 +92,20 @@ public class PagamentoUseCase {
             pagamentoGateway.registrarPagamento(pagamento, cartao);
             throw new LimiteExcedidoCartaoException("Limite disponível insuficiente para realizar o pagamento!");
         }
+    }
+
+    public List<Pagamento> buscarPagamentosPorChaveCliente(UUID idCliente) {
+        Cliente cliente = clienteUseCase.buscaClientePorId(idCliente);
+
+        List<Cartao> cartoes = cartaoUseCase.buscarCartoesPorCpf(cliente.getCpf());
+
+        List<UUID> cartaoIds = cartoes.stream()
+                .map(Cartao::getId)
+                .collect(Collectors.toList());
+
+        List<Pagamento> pagamentos = pagamentoGateway.buscarPagamentosPorCartoes(cartaoIds);
+
+        return pagamentos;
+
     }
 }
