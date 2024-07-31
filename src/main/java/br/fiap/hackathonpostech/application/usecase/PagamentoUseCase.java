@@ -12,6 +12,8 @@ import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
 import br.fiap.hackathonpostech.domain.entity.Pagamento;
+import br.fiap.hackathonpostech.infra.adpter.PagamentoRepositoryGateway;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,7 +65,7 @@ public class PagamentoUseCase {
 
         List<Cartao> cartoes = cartaoUseCase.buscarCartoesPorCpf(cliente.getCpf());
 
-        if (cartoes.isEmpty()) {
+        if (cartoes == null || cartoes.isEmpty()) {
             throw new CartaoNaoExisteException("Nenhum cartão encontrado para o cliente");
         }
 
@@ -73,7 +75,7 @@ public class PagamentoUseCase {
 
         List<Pagamento> pagamentos = pagamentoGateway.buscarPagamentosPorCartoes(cartaoIds);
 
-        if (pagamentos.isEmpty()) {
+        if (pagamentos == null || pagamentos.isEmpty()) {
             throw new PagamentoNaoEncontradoException("Nenhum pagamento encontrado para o cliente");
         }
 
