@@ -91,7 +91,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(UsuarioNaoExisteException.class)
     public ResponseEntity<StandardErrorException> usuarioNaoExisteException(UsuarioNaoExisteException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus status = HttpStatus.FORBIDDEN;
 
         StandardErrorException standardErrorException = StandardErrorException.builder()
                 .timestamp(Instant.now())
@@ -104,30 +104,18 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(standardErrorException);
     }
 
-    @ExceptionHandler(UsuarioExisteException.class)
-    public ResponseEntity<StandardErrorException> usuarioExisteException(UsuarioExisteException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        StandardErrorException standardErrorException = StandardErrorException.builder()
-                .timestamp(Instant.now())
-                .status(status.value())
-                .error("Usuario existe exception")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
-
-        return ResponseEntity.status(status).body(standardErrorException);
-    }
-
     @ExceptionHandler(BadCredentialsException.class)
     ResponseEntity<StandardErrorException> handleWrongCredentials(BadCredentialsException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
         StandardErrorException error = StandardErrorException.builder()
                 .timestamp(Instant.now())
-                .status(NOT_FOUND.value())
+                .status(status.value())
                 .error("Bad credentials exception")
                 .message(e.getMessage())
                 .path(request.getRequestURI())
                 .build();
-        return ResponseEntity.status(NOT_FOUND.value()).body(error);
+
+        return ResponseEntity.status(status.value()).body(error);
     }
 }

@@ -1,5 +1,6 @@
 package br.fiap.hackathonpostech.application.usecase;
 
+import br.fiap.hackathonpostech.application.exceptions.UsuarioNaoExisteException;
 import br.fiap.hackathonpostech.domain.entity.Usuario;
 import br.fiap.hackathonpostech.domain.vo.LoginVO;
 import br.fiap.hackathonpostech.infra.mapper.LoginMapper;
@@ -27,10 +28,21 @@ public class UsuarioUseCase {
         try {
             Authentication auth = authenticationManager.authenticate(usernamePassword);
 
-            return LoginMapper.stringToLoginResponse(tokenService.generateToken((UserDetailsImpl) auth.getPrincipal()));
+            UserDetailsImpl userDetails = new UserDetailsImpl(new Usuario(
+                    String.valueOf(auth.getPrincipal()),
+                    String.valueOf(auth.getCredentials())
+            ));
+
+            return LoginMapper.stringToLoginVO(tokenService.generateToken(userDetails));
 
         } catch (AuthenticationException ex) {
-            throw new BadCredentialsException("Usuario ou senha errados");
+
+            if(ex.getCause() instanceof UsuarioNaoExisteException){
+                throw new UsuarioNaoExisteException(ex.getMessage());
+            }
+
+            throw new BadCredentialsException("Senha errada!");
+
         }
     }
 }

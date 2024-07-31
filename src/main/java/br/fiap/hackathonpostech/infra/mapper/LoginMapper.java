@@ -6,7 +6,7 @@ public class LoginMapper {
     private LoginMapper() {
     }
 
-    public static LoginVO stringToLoginResponse(String token) {
+    public static LoginVO stringToLoginVO(String token) {
         return new LoginVO(token);
     }
 }

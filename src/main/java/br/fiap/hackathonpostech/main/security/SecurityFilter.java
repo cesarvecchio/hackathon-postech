@@ -1,8 +1,6 @@
 package br.fiap.hackathonpostech.main.security;
 
-import br.fiap.hackathonpostech.application.exceptions.UsuarioNaoExisteException;
 import br.fiap.hackathonpostech.application.gateway.UsuarioGateway;
-import br.fiap.hackathonpostech.application.usecase.UsuarioUseCase;
 import br.fiap.hackathonpostech.domain.entity.Usuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,20 +33,17 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Optional<String> token = recoverToken(request);
 
-        if(token.isPresent()){
+        if (token.isPresent()) {
             String login = tokenService.validateToken(token.get());
 
             Usuario usuario = usuarioGateway.encontrarPorUsuario(login);
-
-            if(usuario == null) {
-                throw new UsuarioNaoExisteException("Usuario especificado não existe!");
-            }
 
             UserDetails userDetails = new UserDetailsImpl(usuario);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(usuario, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         filterChain.doFilter(request, response);
     }
 
