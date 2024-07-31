@@ -10,7 +10,7 @@ import br.fiap.hackathonpostech.infra.persistence.repository.PagamentoRepository
 
 public class PagamentoRepositoryGateway implements PagamentoGateway {
 
-    private PagamentoRepository pagamentoRepository;
+    private final PagamentoRepository pagamentoRepository;
 
     public PagamentoRepositoryGateway(PagamentoRepository pagamentoRepository) {
         this.pagamentoRepository = pagamentoRepository;
