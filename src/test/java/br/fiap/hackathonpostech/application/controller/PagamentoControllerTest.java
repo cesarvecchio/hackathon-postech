@@ -130,7 +130,6 @@ class PagamentoControllerTest {
         @Test
         void deveGerarExcecaoQuandoNaoEncontrarCartao() throws Exception {
             Cliente cliente = gerarClienteRequest("11111111111");
-            List<Cartao> cartoes = gerarCartaoList();
 
             when(clienteGateway.buscarClientePorId(cliente.getId())).thenReturn(cliente);
             when(cartaoGateway.buscarCartoesPorCpf(cliente.getCpf())).thenReturn(null);
