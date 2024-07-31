@@ -3,6 +3,7 @@ package br.fiap.hackathonpostech.application.controller;
 import br.fiap.hackathonpostech.application.controller.request.PagamentoRequest;
 import br.fiap.hackathonpostech.application.controller.response.PagamentoListResponse;
 import br.fiap.hackathonpostech.application.controller.response.PagamentoResponse;
+import br.fiap.hackathonpostech.application.documentation.PagamentoControllerDoc;
 import br.fiap.hackathonpostech.application.usecase.PagamentoUseCase;
 import br.fiap.hackathonpostech.domain.entity.Pagamento;
 import br.fiap.hackathonpostech.infra.mapper.PagamentoMapper;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pagamentos")
-public class PagamentoController {
+public class PagamentoController implements PagamentoControllerDoc {
 
     private final PagamentoUseCase pagamentoUseCase;
 
@@ -45,10 +46,10 @@ public class PagamentoController {
                 .map(pagamento -> new PagamentoListResponse(
                         pagamento.getValor(),
                         pagamento.getDescricao(),
-                        pagamento.getMetodoPagamento(),
-                        pagamento.getStatus()
+                        pagamento.getMetodoPagamento().getValor(),
+                        pagamento.getStatus().getValor()
                 ))
-                .collect(Collectors.toList());
+                .toList();
 
         return PagamentoPresenter.toResponseEntityList(pagamentosResponse, HttpStatusCode.valueOf(200));
     }
