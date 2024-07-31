@@ -1,12 +1,10 @@
 package br.fiap.hackathonpostech.application.controller;
 
-import br.fiap.hackathonpostech.application.controller.request.CartaoRequest;
 import br.fiap.hackathonpostech.application.controller.response.PagamentoListResponse;
 import br.fiap.hackathonpostech.application.exceptions.ControllerExceptionHandler;
 import br.fiap.hackathonpostech.application.exceptions.StandardErrorException;
 import br.fiap.hackathonpostech.application.gateway.CartaoGateway;
 import br.fiap.hackathonpostech.application.gateway.ClienteGateway;
-import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.application.usecase.CartaoUseCase;
 import br.fiap.hackathonpostech.application.usecase.ClienteUseCase;
 import br.fiap.hackathonpostech.application.usecase.PagamentoUseCase;
@@ -14,8 +12,6 @@ import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
 import br.fiap.hackathonpostech.domain.entity.Pagamento;
 import br.fiap.hackathonpostech.infra.adpter.PagamentoRepositoryGateway;
-import br.fiap.hackathonpostech.infra.mapper.CartaoMapper;
-import br.fiap.hackathonpostech.infra.mapper.ClienteMapper;
 import br.fiap.hackathonpostech.infra.mapper.PagamentoMapper;
 import br.fiap.hackathonpostech.infra.persistence.entity.PagamentoEntity;
 import br.fiap.hackathonpostech.infra.persistence.repository.PagamentoRepository;
@@ -52,9 +48,6 @@ class PagamentoControllerTest {
 
     @Mock
     private PagamentoRepository pagamentoRepository;
-
-    @Mock
-    private PagamentoGateway pagamentoGateway;
 
     @Mock
     private CartaoGateway cartaoGateway;

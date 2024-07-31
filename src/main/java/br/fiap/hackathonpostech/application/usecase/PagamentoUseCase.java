@@ -1,9 +1,5 @@
 package br.fiap.hackathonpostech.application.usecase;
 
-import static br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum.CARTAO_CREDITO;
-import static br.fiap.hackathonpostech.domain.enums.StatusEnum.APROVADO;
-import static br.fiap.hackathonpostech.domain.enums.StatusEnum.REJEITADO;
-
 import br.fiap.hackathonpostech.application.exceptions.CartaoNaoExisteException;
 import br.fiap.hackathonpostech.application.exceptions.ClienteNaoExisteException;
 import br.fiap.hackathonpostech.application.exceptions.LimiteExcedidoCartaoException;
@@ -12,11 +8,13 @@ import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
 import br.fiap.hackathonpostech.domain.entity.Pagamento;
-import br.fiap.hackathonpostech.infra.adpter.PagamentoRepositoryGateway;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum.CARTAO_CREDITO;
+import static br.fiap.hackathonpostech.domain.enums.StatusEnum.APROVADO;
+import static br.fiap.hackathonpostech.domain.enums.StatusEnum.REJEITADO;
 
 public class PagamentoUseCase {
     private final PagamentoGateway pagamentoGateway;
