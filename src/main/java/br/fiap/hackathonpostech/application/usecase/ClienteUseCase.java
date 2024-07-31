@@ -8,6 +8,8 @@ import br.fiap.hackathonpostech.application.exceptions.ClienteNaoExisteException
 import br.fiap.hackathonpostech.application.gateway.ClienteGateway;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
 
+import java.util.UUID;
+
 public class ClienteUseCase {
 
     private final ClienteGateway clienteGateway;
@@ -30,6 +32,10 @@ public class ClienteUseCase {
         }
 
         return clienteCadastrado;
+    }
+
+    public Cliente buscaClientePorId(UUID id) {
+        return clienteGateway.buscarClientePorId(id);
     }
 
     private void validaCliente(Cliente cliente) {

@@ -6,6 +6,8 @@ import br.fiap.hackathonpostech.infra.mapper.ClienteMapper;
 import br.fiap.hackathonpostech.infra.persistence.entity.ClienteEntity;
 import br.fiap.hackathonpostech.infra.persistence.repository.ClienteRepository;
 
+import java.util.UUID;
+
 public class ClienteRepositoryGateway implements ClienteGateway {
 
     private final ClienteRepository clienteRepository;
@@ -26,5 +28,12 @@ public class ClienteRepositoryGateway implements ClienteGateway {
         return clienteRepository.findByCpf(cpf)
             .map(ClienteMapper::entityToCliente)
             .orElse(null);
+    }
+
+    @Override
+    public Cliente buscarClientePorId(UUID id) {
+        return clienteRepository.findById(id)
+                .map(ClienteMapper::entityToCliente)
+                .orElse(null);
     }
 }

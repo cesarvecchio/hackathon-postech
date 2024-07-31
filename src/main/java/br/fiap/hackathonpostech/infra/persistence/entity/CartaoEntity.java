@@ -1,14 +1,11 @@
 package br.fiap.hackathonpostech.infra.persistence.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.util.UUID;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -25,6 +22,8 @@ public class CartaoEntity {
     @ManyToOne
     @JoinColumn(name = "clienteId")
     private ClienteEntity cliente;
+    @OneToMany(mappedBy = "cartao")
+    private Set<PagamentoEntity> pagamentos;
 
     public CartaoEntity(UUID id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
         this.id = id;
