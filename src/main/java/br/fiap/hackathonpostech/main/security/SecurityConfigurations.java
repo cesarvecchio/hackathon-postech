@@ -31,7 +31,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/cliente").authenticated()
                         .requestMatchers(HttpMethod.POST, "/cartao").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/index.html").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/h2-console").permitAll()
                         .requestMatchers(HttpMethod.POST, "/autenticacao/**").permitAll()
                         .anyRequest().authenticated())
