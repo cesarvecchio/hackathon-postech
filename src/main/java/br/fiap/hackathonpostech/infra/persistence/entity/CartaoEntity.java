@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@Entity
+@Entity(name = "TB_CARTAO")
 public class CartaoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
