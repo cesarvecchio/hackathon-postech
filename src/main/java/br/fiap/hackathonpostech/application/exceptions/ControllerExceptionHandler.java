@@ -145,4 +145,19 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(status).body(standardErrorException);
     }
+
+    @ExceptionHandler(PagamentoNaoEncontradoException.class)
+    public ResponseEntity<StandardErrorException> pagamentoNaoEncontradoException(PagamentoNaoEncontradoException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        StandardErrorException standardErrorException = StandardErrorException.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error("Pagamento não encontrado exception")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(status).body(standardErrorException);
+    }
 }

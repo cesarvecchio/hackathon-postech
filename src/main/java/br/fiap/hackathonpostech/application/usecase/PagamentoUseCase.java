@@ -1,9 +1,6 @@
 package br.fiap.hackathonpostech.application.usecase;
 
-import br.fiap.hackathonpostech.application.exceptions.CartaoNaoExisteException;
-import br.fiap.hackathonpostech.application.exceptions.CodigoCartaoInvalidoException;
-import br.fiap.hackathonpostech.application.exceptions.LimiteExcedidoCartaoException;
-import br.fiap.hackathonpostech.application.exceptions.ValidadeCartaoException;
+import br.fiap.hackathonpostech.application.exceptions.*;
 import br.fiap.hackathonpostech.application.gateway.PagamentoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.domain.entity.Cliente;
@@ -96,14 +93,25 @@ public class PagamentoUseCase {
 
     public List<Pagamento> buscarPagamentosPorChaveCliente(UUID idCliente) {
         Cliente cliente = clienteUseCase.buscaClientePorId(idCliente);
+        if (null == cliente) {
+            throw new ClienteNaoExisteException("Cliente inexistente");
+        }
 
         List<Cartao> cartoes = cartaoUseCase.buscarCartoesPorCpf(cliente.getCpf());
+
+        if (cartoes.isEmpty()) {
+            throw new CartaoNaoExisteException("Nenhum cartão encontrado para o cliente");
+        }
 
         List<UUID> cartaoIds = cartoes.stream()
                 .map(Cartao::getId)
                 .collect(Collectors.toList());
 
         List<Pagamento> pagamentos = pagamentoGateway.buscarPagamentosPorCartoes(cartaoIds);
+
+        if (pagamentos.isEmpty()) {
+            throw new PagamentoNaoEncontradoException("Nenhum pagamento encontrado para o cliente");
+        }
 
         return pagamentos;
 
