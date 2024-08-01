@@ -1,0 +1,38 @@
+version: '3.9'
+
+networks:
+  hackathon:
+
+services:
+
+  banco-postgres:
+    image: postgres:14-alpine
+    container_name: "banco-postgres"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=102030
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=hackathon
+    ports:
+      - "5432:5432"
+    networks:
+      - hackathon
+
+  hackathon-postech:
+    container_name: "hackathon-postech"
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - banco-postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://banco-postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 102030
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_HIBERNATE_SHOW_SQL: true
+      JWT_SECRET: e-commerce_secret
+      JWT_ISSUER: e-commerce_issuer
+    networks:
+      - hackathon
