@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record CartaoRequest(
         String cpf,
-        Integer limite,
+        Double limite,
         String numero,
         @JsonProperty("data_validade")
         String dataValidade,

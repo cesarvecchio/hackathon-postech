@@ -15,7 +15,7 @@ public class CartaoEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String cpf;
-    private Integer limite;
+    private Double limite;
     private String numero;
     private String dataValidade;
     private String cvv;
@@ -25,7 +25,7 @@ public class CartaoEntity {
     @OneToMany(mappedBy = "cartao")
     private Set<PagamentoEntity> pagamentos;
 
-    public CartaoEntity(UUID id, String cpf, Integer limite, String numero, String dataValidade, String cvv) {
+    public CartaoEntity(UUID id, String cpf, Double limite, String numero, String dataValidade, String cvv) {
         this.id = id;
         this.cpf = cpf;
         this.limite = limite;

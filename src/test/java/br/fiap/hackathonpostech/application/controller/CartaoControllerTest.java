@@ -169,7 +169,7 @@ public class CartaoControllerTest {
                 new CartaoEntity(
                         UUID.randomUUID(),
                         "11111111111",
-                        1000,
+                        1000.00,
                         "1111111111111111",
                         "01/28",
                         "11"
@@ -177,7 +177,7 @@ public class CartaoControllerTest {
                 new CartaoEntity(
                         UUID.randomUUID(),
                         "11111111111",
-                        1000,
+                        1000.00,
                         "2222222222222222",
                         "01/28",
                         "11"
@@ -188,7 +188,7 @@ public class CartaoControllerTest {
     private CartaoRequest gerarCartaoRequest() {
         return new CartaoRequest(
                 "11111111111",
-                1000,
+                1000.00,
                 "1111111111111111",
                 "01/28",
                 "11"

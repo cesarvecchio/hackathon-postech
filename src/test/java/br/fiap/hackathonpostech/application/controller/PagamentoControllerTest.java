@@ -180,14 +180,14 @@ class PagamentoControllerTest {
                         .cpf("11111111111")
                         .cvv("111")
                         .dataValidade("11/28")
-                        .limite(1000)
+                        .limite(1000.00)
                         .build(),
                 Cartao.builder()
                         .id(UUID.randomUUID())
                         .cpf("11111111111")
                         .cvv("111")
                         .dataValidade("11/28")
-                        .limite(1000)
+                        .limite(1000.00)
                         .build()
         );
     }
