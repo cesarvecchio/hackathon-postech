@@ -1,4 +1,4 @@
-package br.fiap.hackathonpostech.domain.enums.converters;
+package br.fiap.hackathonpostech.infra.persistence.entity.enums.converters;
 
 import br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum;
 import jakarta.persistence.AttributeConverter;

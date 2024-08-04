@@ -1,5 +1,6 @@
 package br.fiap.hackathonpostech.application.controller;
 
+import br.fiap.hackathonpostech.application.controller.request.PagamentoRequest;
 import br.fiap.hackathonpostech.application.controller.response.PagamentoListResponse;
 import br.fiap.hackathonpostech.application.exceptions.ControllerExceptionHandler;
 import br.fiap.hackathonpostech.application.exceptions.StandardErrorException;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,9 +37,10 @@ import static br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum.CARTAO_C
 import static br.fiap.hackathonpostech.domain.enums.StatusEnum.APROVADO;
 import static br.fiap.hackathonpostech.domain.enums.StatusEnum.REJEITADO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PagamentoControllerTest {
@@ -78,6 +81,167 @@ class PagamentoControllerTest {
     @AfterEach
     public void tearDown() throws Exception {
         mock.close();
+    }
+
+    @Nested
+    class RegistrarPagamento {
+
+        @Test
+        void deveRegistrarPagamento() throws Exception {
+            PagamentoRequest pagamentoRequest = gerarPagamentoRequest();
+            Pagamento pagamento = PagamentoMapper.requestToPagamento(pagamentoRequest);
+            List<Cartao> cartoes = gerarCartaoList();
+
+            when(cartaoGateway.buscarCartoesPorCpf(pagamento.getCpf())).thenReturn(cartoes);
+            when(pagamentoRepository.save(any(PagamentoEntity.class))).thenReturn(gerarPagamentoEntity());
+            when(cartaoGateway.buscarCartaoPorId(cartoes.get(0).getId())).thenReturn(Optional.ofNullable(cartoes.get(0)));
+            when(clienteGateway.buscarClientePorCpf(pagamento.getCpf())).thenReturn(gerarClienteRequest("11111111111"));
+
+            mockMvc.perform(post("/pagamentos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(pagamentoRequest)))
+                    .andExpect(status().isOk());
+
+            verify(pagamentoRepository, times(1)).save(any(PagamentoEntity.class));
+        }
+
+        @Test
+        void deveGerarExcecaoQuandoCodigoCartaoInvalidoRegistrarPagamento() throws Exception {
+            PagamentoRequest pagamentoRequest = new PagamentoRequest("11111111111",
+                    "1111111111111111",
+                    "11/28",
+                    "123",
+                    100.00
+            );
+            Pagamento pagamento = PagamentoMapper.requestToPagamento(pagamentoRequest);
+            List<Cartao> cartoes = gerarCartaoList();
+
+            when(cartaoGateway.buscarCartoesPorCpf(pagamento.getCpf())).thenReturn(cartoes);
+
+            mockMvc.perform(post("/pagamentos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(pagamentoRequest)))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(result -> {
+                        StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(),
+                                StandardErrorException.class);
+                        assertEquals("Código cartão inválido exception", validationErrors.getError());
+                        assertEquals("Código informado inválido!", validationErrors.getMessage());
+                    });
+
+            verify(pagamentoRepository, times(0)).save(any(PagamentoEntity.class));
+        }
+
+        @Test
+        void deveGerarExcecaoQuandoDataValidadeIncorretaRegistrarPagamento() throws Exception {
+            PagamentoRequest pagamentoRequest = new PagamentoRequest("11111111111",
+                    "1111111111111111",
+                    "05/28",
+                    "111",
+                    100.00
+            );
+            Pagamento pagamento = PagamentoMapper.requestToPagamento(pagamentoRequest);
+            List<Cartao> cartoes = gerarCartaoList();
+
+            when(cartaoGateway.buscarCartoesPorCpf(pagamento.getCpf())).thenReturn(cartoes);
+
+            mockMvc.perform(post("/pagamentos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(pagamentoRequest)))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(result -> {
+                        StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(),
+                                StandardErrorException.class);
+                        assertEquals("Validade cartão exception", validationErrors.getError());
+                        assertEquals("Data de validade do cartão incorreta!", validationErrors.getMessage());
+                    });
+
+            verify(pagamentoRepository, times(0)).save(any(PagamentoEntity.class));
+        }
+
+        @Test
+        void deveGerarExcecaoQuandoDataValidadeExpiradaRegistrarPagamento() throws Exception {
+            PagamentoRequest pagamentoRequest = new PagamentoRequest("11111111111",
+                    "1111111111111111",
+                    "12/23",
+                    "111",
+                    100.00
+            );
+            Pagamento pagamento = PagamentoMapper.requestToPagamento(pagamentoRequest);
+            List<Cartao> cartoes = gerarCartaoList();
+            cartoes.get(0).setDataValidade("12/23");
+
+            when(cartaoGateway.buscarCartoesPorCpf(pagamento.getCpf())).thenReturn(cartoes);
+
+            mockMvc.perform(post("/pagamentos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(pagamentoRequest)))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(result -> {
+                        StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(),
+                                StandardErrorException.class);
+                        assertEquals("Validade cartão exception", validationErrors.getError());
+                        assertEquals("Data de validade do cartão expirada!", validationErrors.getMessage());
+                    });
+
+            verify(pagamentoRepository, times(0)).save(any(PagamentoEntity.class));
+        }
+
+        @Test
+        void deveGerarExcecaoQuandoDataValidadeFormatoInvalidoRegistrarPagamento() throws Exception {
+            PagamentoRequest pagamentoRequest = new PagamentoRequest("11111111111",
+                    "1111111111111111",
+                    "99/99",
+                    "111",
+                    100.00
+            );
+            Pagamento pagamento = PagamentoMapper.requestToPagamento(pagamentoRequest);
+            List<Cartao> cartoes = gerarCartaoList();
+            cartoes.get(0).setDataValidade("99/99");
+
+            when(cartaoGateway.buscarCartoesPorCpf(pagamento.getCpf())).thenReturn(cartoes);
+
+            mockMvc.perform(post("/pagamentos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(pagamentoRequest)))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(result -> {
+                        StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(),
+                                StandardErrorException.class);
+                        assertEquals("Validade cartão exception", validationErrors.getError());
+                        assertEquals("Formato de data inválido. Deve ser MM/yy.", validationErrors.getMessage());
+                    });
+
+            verify(pagamentoRepository, times(0)).save(any(PagamentoEntity.class));
+        }
+
+        @Test
+        void deveGerarExcecaoQuandoLimiteDisponivelInsuficienteRegistrarPagamento() throws Exception {
+            PagamentoRequest pagamentoRequest = new PagamentoRequest("11111111111",
+                    "1111111111111111",
+                    "11/28",
+                    "111",
+                    2500.00
+            );
+            Pagamento pagamento = PagamentoMapper.requestToPagamento(pagamentoRequest);
+            List<Cartao> cartoes = gerarCartaoList();
+
+            when(cartaoGateway.buscarCartoesPorCpf(pagamento.getCpf())).thenReturn(cartoes);
+            when(pagamentoRepository.save(any(PagamentoEntity.class))).thenReturn(gerarPagamentoEntity());
+
+            mockMvc.perform(post("/pagamentos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(pagamentoRequest)))
+                    .andExpect(status().isPaymentRequired())
+                    .andExpect(result -> {
+                        StandardErrorException validationErrors = jsonToObject(result.getResponse().getContentAsString(),
+                                StandardErrorException.class);
+                        assertEquals("Limite Execedido exception", validationErrors.getError());
+                        assertEquals("Limite disponível insuficiente para realizar o pagamento!", validationErrors.getMessage());
+                    });
+
+            verify(pagamentoRepository, times(1)).save(any(PagamentoEntity.class));
+        }
     }
 
     @Nested
@@ -181,6 +345,7 @@ class PagamentoControllerTest {
                         .cvv("111")
                         .dataValidade("11/28")
                         .limite(1000.00)
+                        .numero("1111111111111111")
                         .build(),
                 Cartao.builder()
                         .id(UUID.randomUUID())
@@ -247,6 +412,25 @@ class PagamentoControllerTest {
                         .dataValidade("11/28")
                         .cvv("111")
                         .build()
+        );
+    }
+
+    private PagamentoRequest gerarPagamentoRequest() {
+        return new PagamentoRequest("11111111111",
+                "1111111111111111",
+                "11/28",
+                "111",
+                100.00
+        );
+    }
+
+    private PagamentoEntity gerarPagamentoEntity() {
+        return new PagamentoEntity(
+                UUID.randomUUID(),
+                100.00,
+                "Compra produdo X",
+                CARTAO_CREDITO,
+                APROVADO
         );
     }
 

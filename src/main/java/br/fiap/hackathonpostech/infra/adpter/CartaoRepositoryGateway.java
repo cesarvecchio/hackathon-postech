@@ -9,6 +9,8 @@ import br.fiap.hackathonpostech.infra.persistence.entity.CartaoEntity;
 import br.fiap.hackathonpostech.infra.persistence.repository.CartaoRepository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class CartaoRepositoryGateway implements CartaoGateway {
     private final CartaoRepository cartaoRepository;
@@ -38,5 +40,9 @@ public class CartaoRepositoryGateway implements CartaoGateway {
         return cartaoRepository.existsByNumero(numero);
     }
 
+    @Override
+    public Optional<Cartao> buscarCartaoPorId(UUID id) {
+        return cartaoRepository.findById(id).map(CartaoMapper::entityToCartao);
+    }
 
 }

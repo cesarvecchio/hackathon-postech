@@ -1,6 +1,7 @@
 package br.fiap.hackathonpostech.application.usecase;
 
 import br.fiap.hackathonpostech.application.exceptions.CartaoExisteException;
+import br.fiap.hackathonpostech.application.exceptions.CartaoNaoExisteException;
 import br.fiap.hackathonpostech.application.exceptions.LimiteQtdCartoesException;
 import br.fiap.hackathonpostech.application.gateway.CartaoGateway;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
@@ -27,18 +28,30 @@ public class CartaoUseCase {
         cartaoGateway.gerarCartao(cartao, cliente);
     }
 
+    public void atualizarLimiteCartao(Cartao cartao, Double limite) {
+        Cartao cartaoEncontrado = cartaoGateway.buscarCartaoPorId(cartao.getId())
+                .orElseThrow(
+                        () -> new CartaoNaoExisteException("Cartão não encontrado para o id fornecido!")
+                );
+        cartaoEncontrado.setLimite(limite);
+
+        Cliente cliente = clienteUseCase.buscaClientePorCpf(cartao.getCpf());
+
+        cartaoGateway.gerarCartao(cartaoEncontrado, cliente);
+    }
+
     public List<Cartao> buscarCartoesPorCpf(String cpf) {
         return cartaoGateway.buscarCartoesPorCpf(cpf);
     }
 
     private void verificarPermissaoNovoCartao(String cpf) {
-        if(buscarCartoesPorCpf(cpf).size() == 2) {
+        if (buscarCartoesPorCpf(cpf).size() == 2) {
             throw new LimiteQtdCartoesException("Limite da quantide de cartoes por CPF excedido!");
         }
     }
 
     private void validarNumeroCartao(String numero) {
-        if(cartaoGateway.existeCartaoPorNumero(numero)){
+        if (cartaoGateway.existeCartaoPorNumero(numero)) {
             throw new CartaoExisteException("Numero de cartão já existente.");
         }
     }
