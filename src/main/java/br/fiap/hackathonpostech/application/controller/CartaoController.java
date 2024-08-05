@@ -33,7 +33,7 @@ public class CartaoController implements CartaoControllerDoc {
         return CartaoPresenter.toResponseEntity(HttpStatusCode.valueOf(200));
     }
 
-    @GetMapping(value = "{cpf}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{cpf}")
     public ResponseEntity<List<CartaoResponse>> buscarCartoesPorCpf(@Valid @PathVariable("cpf") String cpf) {
         List<Cartao> listaCartao = cartaoUseCase.buscarCartoesPorCpf(cpf);
         List<CartaoResponse> listaCartaoResponse = listaCartao.stream().map(CartaoMapper::cartaoToResponse).toList();

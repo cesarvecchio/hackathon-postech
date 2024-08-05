@@ -6,11 +6,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Cliente", description = "Cliente API")
-public interface ClienteControllerDoc {
+public interface ClienteControllerDoc extends Authentication {
 
     @Operation(summary = "Registrar um cliente", method = "POST")
     @ApiResponses(value = {
@@ -19,5 +20,6 @@ public interface ClienteControllerDoc {
         @ApiResponse(responseCode = "401", description = "Erro de autenticação"),
         @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<ClienteResponse> registrarCliente(@RequestBody(description = "Informações para registrar um cliente") ClienteRequest clienteRequest);
 }

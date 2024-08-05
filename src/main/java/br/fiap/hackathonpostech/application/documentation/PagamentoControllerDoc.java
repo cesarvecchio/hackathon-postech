@@ -8,13 +8,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Pagamento", description = "Pagamento API")
-public interface PagamentoControllerDoc {
+public interface PagamentoControllerDoc extends Authentication {
 
     @Operation(summary = "Registrar um pagamento", method = "POST")
     @ApiResponses(value = {
@@ -23,6 +24,7 @@ public interface PagamentoControllerDoc {
         @ApiResponse(responseCode = "402", description = "Limite do cartão estourado"),
         @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<PagamentoResponse> registrarPagamento(@RequestBody(description = "Informações para registrar um pagamento") PagamentoRequest pagamentoRequest);
 
     @Operation(summary = "Consultar pagamentos de um cliente", method = "POST")
@@ -31,5 +33,6 @@ public interface PagamentoControllerDoc {
         @ApiResponse(responseCode = "401", description = "Erro de autenticação"),
         @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Parameter(description = "Chave do cliente") UUID chave);
 }
