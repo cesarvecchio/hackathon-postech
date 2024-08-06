@@ -93,16 +93,16 @@ class PagamentoControllerTest {
                     .map(PagamentoMapper::pagamentoToEntity)
                     .collect(Collectors.toList());
 
-            when(clienteGateway.buscarClientePorId(cliente.getId())).thenReturn(cliente);
+            when(clienteGateway.buscarClientePorCpf(cliente.getCpf())).thenReturn(cliente);
             when(cartaoGateway.buscarCartoesPorCpf(cliente.getCpf())).thenReturn(cartoes);
             when(pagamentoRepository.findByCartaoIdIn(cartoes.stream().map(Cartao::getId).toList())).thenReturn(pagamentoList);
 
-            mockMvc.perform(get("/pagamentos/{chave}", cliente.getId())
+            mockMvc.perform(get("/pagamentos/{chave}", cliente.getCpf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(pagamentoListResponseList)))
                     .andExpect(status().isOk());
 
-            verify(clienteGateway).buscarClientePorId(cliente.getId());
+            verify(clienteGateway).buscarClientePorCpf(cliente.getCpf());
             verify(cartaoGateway).buscarCartoesPorCpf(cliente.getCpf());
             verify(pagamentoRepository).findByCartaoIdIn(cartoes.stream().map(Cartao::getId).toList());
         }
@@ -111,9 +111,9 @@ class PagamentoControllerTest {
         void deveGerarExcecaoQuandoNaoEncontrarCliente() throws Exception {
             Cliente cliente = gerarClienteRequest("11111111111");
 
-            when(clienteGateway.buscarClientePorId(cliente.getId())).thenReturn(null);
+            when(clienteGateway.buscarClientePorCpf(cliente.getCpf())).thenReturn(null);
 
-            mockMvc.perform(get("/pagamentos/{chave}", cliente.getId())
+            mockMvc.perform(get("/pagamentos/{chave}", cliente.getCpf())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isInternalServerError())
                     .andExpect(result -> {
@@ -121,20 +121,20 @@ class PagamentoControllerTest {
                                 StandardErrorException.class);
 
                         assertEquals("Cliente nao existe exception", validationErrors.getError());
-                        assertEquals("Cliente inexistente", validationErrors.getMessage());
+                        assertEquals("Nenhum cliente cadastrado com o CPF informado.", validationErrors.getMessage());
                     });
 
-            verify(clienteGateway).buscarClientePorId(cliente.getId());
+            verify(clienteGateway).buscarClientePorCpf(cliente.getCpf());
         }
 
         @Test
         void deveGerarExcecaoQuandoNaoEncontrarCartao() throws Exception {
             Cliente cliente = gerarClienteRequest("11111111111");
 
-            when(clienteGateway.buscarClientePorId(cliente.getId())).thenReturn(cliente);
+            when(clienteGateway.buscarClientePorCpf(cliente.getCpf())).thenReturn(cliente);
             when(cartaoGateway.buscarCartoesPorCpf(cliente.getCpf())).thenReturn(null);
 
-            mockMvc.perform(get("/pagamentos/{chave}", cliente.getId())
+            mockMvc.perform(get("/pagamentos/{chave}", cliente.getCpf())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isInternalServerError())
                     .andExpect(result -> {
@@ -144,7 +144,7 @@ class PagamentoControllerTest {
                         assertEquals("Nenhum cartão encontrado para o cliente", validationErrors.getMessage());
                     });
 
-            verify(clienteGateway).buscarClientePorId(cliente.getId());
+            verify(clienteGateway).buscarClientePorCpf(cliente.getCpf());
             verify(cartaoGateway).buscarCartoesPorCpf(cliente.getCpf());
         }
 
@@ -153,11 +153,11 @@ class PagamentoControllerTest {
             Cliente cliente = gerarClienteRequest("11111111111");
             List<Cartao> cartoes = gerarCartaoList();
 
-            when(clienteGateway.buscarClientePorId(cliente.getId())).thenReturn(cliente);
+            when(clienteGateway.buscarClientePorCpf(cliente.getCpf())).thenReturn(cliente);
             when(cartaoGateway.buscarCartoesPorCpf(cliente.getCpf())).thenReturn(cartoes);
             when(pagamentoRepository.findByCartaoIdIn(cartoes.stream().map(Cartao::getId).toList())).thenReturn(List.of());
 
-            mockMvc.perform(get("/pagamentos/{chave}", cliente.getId())
+            mockMvc.perform(get("/pagamentos/{chave}", cliente.getCpf())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isInternalServerError())
                     .andExpect(result -> {
@@ -167,7 +167,7 @@ class PagamentoControllerTest {
                         assertEquals("Nenhum pagamento encontrado para o cliente", validationErrors.getMessage());
                     });
 
-            verify(clienteGateway).buscarClientePorId(cliente.getId());
+            verify(clienteGateway).buscarClientePorCpf(cliente.getCpf());
             verify(cartaoGateway).buscarCartoesPorCpf(cliente.getCpf());
             verify(pagamentoRepository).findByCartaoIdIn(cartoes.stream().map(Cartao::getId).toList());
         }

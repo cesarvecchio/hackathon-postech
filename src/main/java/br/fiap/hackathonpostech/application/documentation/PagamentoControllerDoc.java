@@ -31,5 +31,5 @@ public interface PagamentoControllerDoc {
         @ApiResponse(responseCode = "401", description = "Erro de autenticação"),
         @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Parameter(description = "Chave do cliente") UUID chave);
+    ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Parameter(description = "Chave do cliente") String chave);
 }

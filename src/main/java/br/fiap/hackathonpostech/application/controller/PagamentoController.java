@@ -39,7 +39,7 @@ public class PagamentoController implements PagamentoControllerDoc {
     }
 
     @GetMapping(value = "/{chave}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Valid @PathVariable("chave") UUID chave) {
+    public ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Valid @PathVariable("chave") String chave) {
         List<Pagamento> pagamentos = pagamentoUseCase.buscarPagamentosPorChaveCliente(chave);
 
         List<PagamentoListResponse> pagamentosResponse = pagamentos.stream()

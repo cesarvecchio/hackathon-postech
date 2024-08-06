@@ -15,6 +15,7 @@ import java.util.UUID;
 import static br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum.CARTAO_CREDITO;
 import static br.fiap.hackathonpostech.domain.enums.StatusEnum.APROVADO;
 import static br.fiap.hackathonpostech.domain.enums.StatusEnum.REJEITADO;
+import static java.util.Objects.isNull;
 
 public class PagamentoUseCase {
     private final PagamentoGateway pagamentoGateway;
@@ -55,15 +56,12 @@ public class PagamentoUseCase {
         }
     }
 
-    public List<Pagamento> buscarPagamentosPorChaveCliente(UUID idCliente) {
-        Cliente cliente = clienteUseCase.buscaClientePorId(idCliente);
-        if (null == cliente) {
-            throw new ClienteNaoExisteException("Cliente inexistente");
-        }
+    public List<Pagamento> buscarPagamentosPorChaveCliente(String cpfCliente) {
+        Cliente cliente = clienteUseCase.buscaClientePorCpf(cpfCliente);
 
         List<Cartao> cartoes = cartaoUseCase.buscarCartoesPorCpf(cliente.getCpf());
 
-        if (cartoes == null || cartoes.isEmpty()) {
+        if (isNull(cartoes) || cartoes.isEmpty()) {
             throw new CartaoNaoExisteException("Nenhum cartão encontrado para o cliente");
         }
 
@@ -73,7 +71,7 @@ public class PagamentoUseCase {
 
         List<Pagamento> pagamentos = pagamentoGateway.buscarPagamentosPorCartoes(cartaoIds);
 
-        if (pagamentos == null || pagamentos.isEmpty()) {
+        if (isNull(pagamentos) || pagamentos.isEmpty()) {
             throw new PagamentoNaoEncontradoException("Nenhum pagamento encontrado para o cliente");
         }
 
