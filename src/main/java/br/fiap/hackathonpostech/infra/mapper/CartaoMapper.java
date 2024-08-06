@@ -1,6 +1,7 @@
 package br.fiap.hackathonpostech.infra.mapper;
 
 import br.fiap.hackathonpostech.application.controller.request.CartaoRequest;
+import br.fiap.hackathonpostech.application.controller.response.CartaoResponse;
 import br.fiap.hackathonpostech.domain.entity.Cartao;
 import br.fiap.hackathonpostech.infra.persistence.entity.CartaoEntity;
 
@@ -38,5 +39,14 @@ public class CartaoMapper {
                 .dataValidade(cartaoRequest.dataValidade())
                 .cvv(cartaoRequest.cvv())
                 .build();
+    }
+
+    public static CartaoResponse cartaoToResponse(Cartao cartao){
+        return new CartaoResponse(
+                cartao.getNumero(),
+                cartao.getDataValidade(),
+                cartao.getCvv(),
+                cartao.getLimite()
+        );
     }
 }

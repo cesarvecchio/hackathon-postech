@@ -9,7 +9,7 @@ import lombok.Data;
 public class Cartao {
     private UUID id;
     private String cpf;
-    private Integer limite;
+    private Double limite;
     private String numero;
     private String dataValidade;
     private String cvv;

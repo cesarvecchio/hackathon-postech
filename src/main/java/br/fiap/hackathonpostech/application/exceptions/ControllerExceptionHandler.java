@@ -166,7 +166,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(UsuarioNaoExisteException.class)
     public ResponseEntity<StandardErrorException> usuarioNaoExisteException(UsuarioNaoExisteException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.PAYMENT_REQUIRED;
+        HttpStatus status = HttpStatus.FORBIDDEN;
 
         StandardErrorException standardErrorException = StandardErrorException.builder()
                 .timestamp(Instant.now())

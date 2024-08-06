@@ -14,7 +14,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Pagamento", description = "Pagamento API")
-public interface PagamentoControllerDoc {
+public interface PagamentoControllerDoc extends Authentication {
 
     @Operation(summary = "Registrar um pagamento", method = "POST")
     @ApiResponses(value = {
@@ -31,5 +31,5 @@ public interface PagamentoControllerDoc {
         @ApiResponse(responseCode = "401", description = "Erro de autenticação"),
         @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Parameter(description = "Chave do cliente") String chave);
+    ResponseEntity<List<PagamentoListResponse>> buscarPagamentosPorChaveCliente(@Parameter(description = "Chave do cliente") UUID chave);
 }

@@ -2,8 +2,8 @@ package br.fiap.hackathonpostech.infra.persistence.entity;
 
 import br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum;
 import br.fiap.hackathonpostech.domain.enums.StatusEnum;
-import br.fiap.hackathonpostech.domain.enums.converters.MetodoPagamentoEnumConverter;
-import br.fiap.hackathonpostech.domain.enums.converters.StatusEnumConverter;
+import br.fiap.hackathonpostech.infra.persistence.entity.enums.converters.MetodoPagamentoEnumConverter;
+import br.fiap.hackathonpostech.infra.persistence.entity.enums.converters.StatusEnumConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -42,14 +42,15 @@ public class PagamentoUseCase {
         validarLimiteDisponivel(cartao, pagamento);
 
         pagamento.setStatus(APROVADO);
-        //cartao.setLimite(cartao.getLimite() - pagamento.getValor());
+        Double novoLimite = cartao.getLimite() - pagamento.getValor();
+        cartaoUseCase.atualizarLimiteCartao(cartao, novoLimite);
 
         return pagamentoGateway.registrarPagamento(pagamento, cartao);
     }
 
     private void validarLimiteDisponivel(Cartao cartao, Pagamento pagamento) {
 
-        if(cartao.getLimite() <= pagamento.getValor()){
+        if (cartao.getLimite() <= pagamento.getValor()) {
             pagamento.setStatus(REJEITADO);
             pagamentoGateway.registrarPagamento(pagamento, cartao);
             throw new LimiteExcedidoCartaoException("Limite disponível insuficiente para realizar o pagamento!");

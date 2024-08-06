@@ -4,12 +4,13 @@ import br.fiap.hackathonpostech.application.exceptions.CodigoCartaoInvalidoExcep
 import br.fiap.hackathonpostech.application.exceptions.ValidadeCartaoException;
 import br.fiap.hackathonpostech.domain.enums.MetodoPagamentoEnum;
 import br.fiap.hackathonpostech.domain.enums.StatusEnum;
+import lombok.Builder;
+import lombok.Data;
+
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
-import lombok.Builder;
-import lombok.Data;
 
 @Data
 @Builder
@@ -52,7 +53,7 @@ public class Pagamento {
             // Comparar a data de validade com a data atual
             return validade.isBefore(anoMesAtual);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Formato de data inválido. Deve ser MM/yy.", e);
+            throw new ValidadeCartaoException("Formato de data inválido. Deve ser MM/yy.");
         }
     }
 }
