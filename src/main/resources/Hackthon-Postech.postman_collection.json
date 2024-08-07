@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "242ab5f2-a6b9-49f8-b5c4-4a192f286ba2",
+		"name": "Hackthon-Postech",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12369015"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "Autenticar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.response.json().token;\r",
+									"pm.collectionVariables.set(\"TOKEN\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\": \"adj2\",\r\n    \"senha\": \"adj@1234\"\r\n\r\n    // \"usuario\": \"adj2\",\r\n    // \"senha\": \"adj@1234_\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/autenticacao",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"autenticacao"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Registrar Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"11111111111\",\r\n    \"nome\": \"Alfredo\",\r\n    \"email\": \"alfredo@gmail.com\",\r\n    \"telefone\": \"40028922\",\r\n    \"rua\": \"Iolanda Diorio Franca\",\r\n    \"cidade\": \"Sao Paulo\",\r\n    \"estado\": \"Sao Paulo\",\r\n    \"cep\": \"08431370\",\r\n    \"pais\": \"Brasil\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cliente",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cliente"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cartao",
+			"item": [
+				{
+					"name": "Gerar Cartao",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"11111111111\",\r\n    \"numero\": \"1111111111111111\",\r\n    \"data_validade\": \"01/28\",\r\n    \"cvv\": \"11\",\r\n    \"limite\": 1000.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/cartao",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cartao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cartoes Por Cpf",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/cartao/:cpf",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"cartao",
+								":cpf"
+							],
+							"variable": [
+								{
+									"key": "cpf",
+									"value": "11111111111"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pagamento",
+			"item": [
+				{
+					"name": "Registrar Pagamento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"11111111111\",\r\n    \"numero\": \"1111111111111111\",\r\n    \"data_validade\": \"01/28\",\r\n    \"cvv\": \"11\",\r\n    \"valor\": 200.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/pagamentos",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"pagamentos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pagamentos Por Chave Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/pagamentos/:chave",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"pagamentos",
+								":chave"
+							],
+							"variable": [
+								{
+									"key": "chave",
+									"value": "11111111111"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		}
+	]
+}
