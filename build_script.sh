@@ -3,5 +3,5 @@
 make build-project
 make build-docker
 
-docker compose build
-docker compose up -d
+make compose-build
+make compose-up

@@ -39,4 +39,13 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	testLogging {
+		events("passed", "skipped", "failed")
+	}
+}
+
+tasks.register<Test>("unitTest") {
+	filter {
+		includeTestsMatching("br.fiap.hackathonpostech.*Test")
+	}
 }
